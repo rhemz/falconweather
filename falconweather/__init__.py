@@ -3,6 +3,14 @@ from webargs.falconparser import parser as falcon_parser
 from marshmallow import fields
 
 
+class WeatherResource(object):
+
+    def on_get(self, req, resp):
+        resp.media = {
+            'status': 'ok'
+        }
+
+
 class WindResource(object):
 
     def on_post(self, req, resp):
