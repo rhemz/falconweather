@@ -1,10 +1,12 @@
 import os
+import time
 
 import falcon
 from webargs.falconparser import parser as falcon_parser
 from marshmallow import fields
 
 from falconweather.db import SessionManager
+from falconweather.models import WindMeasurement
 
 
 class FalconWeatherResource(object):
@@ -32,6 +34,16 @@ class WindResource(FalconWeatherResource):
             force_all=True
         )
         print(args)
+
+        with self.db.get_session(autocommit=True) as session:
+            session.add(
+                WindMeasurement(
+                    epoch=int(time.time()),
+                    mph=args['mph'],
+                )
+            )
+            # session.commit()
+
         resp.media = args
         pass
 
