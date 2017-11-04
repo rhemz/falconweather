@@ -11,4 +11,6 @@ tables = (
 
 if __name__ == '__main__':
     for model in tables:
-        print(CreateTable(model.__table__).compile(dialect=mysql.dialect()))
+        print('{};\n\n\n'.format(
+            CreateTable(model.__table__).compile(dialect=mysql.dialect()))
+        )
