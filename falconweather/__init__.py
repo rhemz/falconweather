@@ -27,4 +27,5 @@ class WindResource(object):
 
 
 api = falcon.API()
+api.add_route('/', WeatherResource())
 api.add_route('/wind', WindResource())
