@@ -6,15 +6,15 @@ from marshmallow import fields
 class WindResource(object):
 
     def on_post(self, req, resp):
-        print('posted')
         args = falcon_parser.parse(
-            params={
-                'mph': fields.Float(missing=True, required=True)
+            {
+                'mph': fields.Float(required=True)
             },
             req=req,
             force_all=True
         )
         print(args)
+        resp.media = args
         pass
 
 
