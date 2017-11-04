@@ -42,7 +42,7 @@ class WindResource(FalconWeatherResource):
                     mph=args['mph'],
                 )
             )
-            # session.commit()
+            session.commit()
 
         resp.media = args
         pass
