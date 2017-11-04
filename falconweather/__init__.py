@@ -35,14 +35,13 @@ class WindResource(FalconWeatherResource):
         )
         print(args)
 
-        with self.db.get_session(autocommit=True) as session:
+        with self.db.get_session() as session:
             session.add(
                 WindMeasurement(
                     epoch=int(time.time()),
                     mph=args['mph'],
                 )
             )
-            session.commit()
 
         resp.media = args
         pass
