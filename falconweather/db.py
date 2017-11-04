@@ -10,22 +10,28 @@ class SessionManager(object):
     _db_config = None
     _pool_args = None
 
-    def __init__(self, db_config, pool_args=None, **kwargs):
+    def __init__(self, db_config, pool_args=None, driver='mysql+pymysql', **kwargs):
         """
         Parent initializer.  Takes SQLAlchemy database config parameters.
         :param db_config: Database config, consisting of known SQLAlchemy
         config key/values
         :type db_config: dict
+        :param pool_args: Connection pool args
+        :type pool_args: dict
+        :param driver: Which database driver to use
+        :type driver: str
         :return: self
         """
         self._db_config = db_config
         self._pool_args = pool_args
+        self._driver = driver
 
         engine_string = self.build_db_engine_string(
             user=self._db_config['user'],
             password=self._db_config['password'],
             host=self._db_config['host'],
             port=self._db_config['port'],
+            engine=self._driver,
             db=self._db_config['db']
         )
         self._engine = create_engine(engine_string, **self._pool_args)
