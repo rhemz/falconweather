@@ -42,6 +42,7 @@ class WindResource(FalconWeatherResource):
                     mph=args['mph'],
                 )
             )
+            session.flush()
 
         resp.media = args
         pass
