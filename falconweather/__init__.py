@@ -8,6 +8,8 @@ from marshmallow import fields
 from falconweather.db import SessionManager
 from falconweather.models import WindMeasurement
 
+from sqlalchemy import func
+
 
 class FalconWeatherResource(object):
 
@@ -18,8 +20,15 @@ class FalconWeatherResource(object):
 class WeatherResource(FalconWeatherResource):
 
     def on_get(self, req, resp):
+
+        # get counts of measurements.  just wind for now.  others soon?
+        with self.db.get_session() as session:
+            q = session.query(func.count(WindMeasurement.epoch).label('count'))
+            wind_count = q.one().count
+
         resp.media = {
-            'status': 'ok'
+            'status': 'ok',
+            'wind_measurements': wind_count
         }
 
 
@@ -27,13 +36,12 @@ class WindResource(FalconWeatherResource):
 
     def on_post(self, req, resp):
         args = falcon_parser.parse(
-            {
+            argmap={
                 'mph': fields.Float(required=True)
             },
             req=req,
             force_all=True
         )
-        print(args)
 
         with self.db.get_session(autocommit=True) as session:
             session.add(
@@ -44,11 +52,13 @@ class WindResource(FalconWeatherResource):
             )
             session.flush()
 
-        resp.media = args
-        pass
+        resp.media = {
+            'status': 'ok',
+            'args': args,
+        }
 
 
-# start the app
+# start
 session_manager = SessionManager(
     db_config={
         'host':     os.environ.get('FALCONWEATHER_DB_HOST', 'localhost'),
