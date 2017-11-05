@@ -64,6 +64,13 @@ class WindResource(FalconWeatherResource):
             day_avg = r.avg
             day_max = r.max
 
+            q = session.query(
+                WindMeasurement.max_mph.label('current')
+            ).order_by(
+                WindMeasurement.epoch.desc()
+            ).limit(1)
+            current = q.one().current
+
         # load and render template
         template = self.load_template('wind.j2')
         resp.content_type = 'text/html'
@@ -71,7 +78,8 @@ class WindResource(FalconWeatherResource):
             hour_max=hour_max,
             hour_avg=hour_avg,
             day_max=day_max,
-            day_avg=day_avg
+            day_avg=day_avg,
+            current=current
         )
 
     def on_post(self, req, resp):
