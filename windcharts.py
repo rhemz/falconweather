@@ -131,7 +131,10 @@ if __name__ == '__main__':
         if isinstance(c, pygal.Pie):
             for speed, count in data:
                 c.add(str(speed), count)
-                
+
+            c.width = c.height
+            c.show_legend = True
+
         elif isinstance(c, pygal.Line) or isinstance(c, pygal.StackedLine):
             for i, label in attrs['data_keys'].items():
                 c.add(label, [d[i] for d in data], show_dots=False)
