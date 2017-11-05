@@ -45,6 +45,8 @@ def query_24h_groups(session):
         WindMeasurement.epoch >= func.unix_timestamp(func.now()) - 86400
     ).group_by(
         func.round(WindMeasurement.avg_mph)
+    ).order_by(
+        'count'
     )
 
     averages = [(int(row.avg), int(row.count)) for row in q.all()]
