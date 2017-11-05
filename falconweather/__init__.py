@@ -8,8 +8,8 @@ from marshmallow import fields
 from falconweather.db import SessionManager
 from falconweather.models import WindMeasurement
 
-from pymysql.err import IntegrityError
 from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 
 
 class FalconWeatherResource(object):
