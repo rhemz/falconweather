@@ -37,6 +37,24 @@ def query_groups(session, cutoff):
     return averages
 
 
+def query_current_vs_max(session, cutoff):
+    q = session.query(
+        WindMeasurement.max_mph.label('current')
+    ).order_by(
+        WindMeasurement.epoch.desc()
+    ).limit(1)
+    current = q.one().current
+
+    q = session.query(
+        func.max(WindMeasurement.max_mph).label('max')
+    ).filter(
+        WindMeasurement.epoch >= func.unix_timestamp(func.now()) - cutoff
+    )
+    max = q.one().max
+
+    return current, max
+
+
 CHARTS = {
     # averages
     'avg_1h': {
@@ -125,6 +143,16 @@ CHARTS = {
         },
         'data_label': 'Wind Speed'
     },
+    'current_vs_24h': {
+        'chart_type': pygal.Pie,
+        'title': 'Current Speed vs. 24h High',
+        'data_method': query_current_vs_max,
+        'data_args': {'cutoff': 86400},
+        'data_keys': {
+            0: 'Wind Speeds'
+        },
+        'data_label': 'Wind Speed'
+    },
 }
 
 BASE_CHART = pygal.Config()
@@ -144,6 +172,7 @@ if __name__ == '__main__':
         c = attrs['chart_type'](BASE_CHART)
         c.title = attrs['title']
 
+        # call data function
         with session_manager.get_session() as session:
             # query_function = globals()['query_{}'.format(chart)]
             query_function = attrs['data_method']
@@ -157,12 +186,18 @@ if __name__ == '__main__':
             c.width = int(BASE_CHART.height * 1.25)
             c.show_legend = True
             c.y_title = None
-            # c.inner_radius = 0.4
 
         # line charts
         elif isinstance(c, pygal.Line) or isinstance(c, pygal.StackedLine):
             for i, label in attrs['data_keys'].items():
                 c.add(label, [d[i] for d in data], show_dots=False)
+
+        # gauges
+        elif isinstance(c, pygal.SolidGauge):
+            c.inner_radius = 0.70
+            c.value_formatter = lambda x: '{:.10g}%'.format(x)
+
+            c.add('current vs max', [{'value': data[0], 'max_value': data[1]}])
 
         c.render_to_file('/srv/www/net.8harvest.weather/public/wind_{}.svg'.format(chart))
         c.render_to_png('/srv/www/net.8harvest.weather/public/wind_{}.png'.format(chart))
