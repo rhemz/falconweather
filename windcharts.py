@@ -198,6 +198,7 @@ if __name__ == '__main__':
             c.inner_radius = 0.60
             c.width = BASE_CHART.height
             c.y_title = None
+            c.x_title = None
             c.half_pie = True
             c.value_formatter = lambda x: '{:.10g} mph'.format(x)
 
