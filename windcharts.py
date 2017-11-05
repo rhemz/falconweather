@@ -44,7 +44,6 @@ with session_manager.get_session() as session:
 
 line_chart = pygal.Line(
     x_label_rotation=20,
-    style=LightStyle,
     # interpolate='cubic'
 )
 line_chart.title = 'Average Wind Speed (1h)'
@@ -73,7 +72,6 @@ with session_manager.get_session() as session:
 
 line_chart = pygal.Line(
     x_label_rotation=20,
-    style=LightStyle,
     # interpolate='cubic'
 )
 line_chart.title = 'Average Wind Speed (24h)'
