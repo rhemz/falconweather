@@ -157,7 +157,7 @@ CHARTS = {
 
 BASE_CHART = pygal.Config()
 BASE_CHART.height = 400
-BASE_CHART.width = 1024
+BASE_CHART.width = 1200
 BASE_CHART.y_title = 'mph'
 # base_chart.interpolate = 'cubic'
 BASE_CHART.x_label_rotation = 20
