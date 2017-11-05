@@ -128,9 +128,14 @@ if __name__ == '__main__':
             query_function = attrs['data_method']
             data = query_function(session)
 
-        for i, label in attrs['data_keys'].items():
-            c.add(label, [d[i] for d in data], show_dots=False)
-        # c.add(attrs['data_label'], [d[0] for d in data], show_dots=False)
+        if isinstance(c, pygal.Pie):
+            for speed, count in data:
+                c.add(str(speed), count)
+                
+        elif isinstance(c, pygal.Line) or isinstance(c, pygal.StackedLine):
+            for i, label in attrs['data_keys'].items():
+                c.add(label, [d[i] for d in data], show_dots=False)
+                # c.add(attrs['data_label'], [d[0] for d in data], show_dots=False)
 
         c.render_to_file('/srv/www/net.8harvest.weather/public/wind_{}.svg'.format(chart))
         c.render_to_png('/srv/www/net.8harvest.weather/public/wind_{}.png'.format(chart))
