@@ -113,7 +113,7 @@ CHARTS = {
     },
     'max_7d': {
         'chart_type': pygal.Line,
-        'title': 'Average Wind Speed (week)',
+        'title': 'Maximum Wind Speed (week)',
         'data_method': query_wind_speeds,
         'data_args': {'cutoff': 86400 * 7},
         'data_keys': {
