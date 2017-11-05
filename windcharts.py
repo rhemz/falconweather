@@ -54,3 +54,4 @@ line_chart.x_labels = map(lambda d: d.strftime('%Y-%m-%d'), [
 line_chart.add('Wind Speed', [x[0] for x in last_hour], show_dots=False)
 
 line_chart.render_to_file('wind_avg_1h.svg', show_legend=False)
+line_chart.render_to_png('wind_avg_1h.png', show_legend=False)
