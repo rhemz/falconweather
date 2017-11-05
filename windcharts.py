@@ -45,8 +45,6 @@ def query_24h_groups(session):
         WindMeasurement.epoch >= func.unix_timestamp(func.now()) - 86400
     ).group_by(
         func.round(WindMeasurement.avg_mph)
-    ).order_by(
-        'count'
     )
 
     averages = [(int(row.avg), int(row.count)) for row in q.all()]
@@ -130,15 +128,17 @@ if __name__ == '__main__':
             query_function = attrs['data_method']
             data = query_function(session)
 
+        # pie charts
         if isinstance(c, pygal.Pie):
             print(data)
             for speed, count in data:
-                c.add('{} {}'.format(str(speed), BASE_CHART.y_title), count)
+                c.add('{} {}'.format(str(speed), BASE_CHART.y_title), count, inner_radius=count)
 
             c.width = int(BASE_CHART.height * 1.25)
             c.show_legend = True
             c.y_title = None
 
+        # line charts
         elif isinstance(c, pygal.Line) or isinstance(c, pygal.StackedLine):
             for i, label in attrs['data_keys'].items():
                 c.add(label, [d[i] for d in data], show_dots=False)
