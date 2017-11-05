@@ -33,6 +33,8 @@ with session_manager.get_session() as session:
         WindMeasurement.max_mph.label('max')
     ).filter(
         WindMeasurement.epoch >= func.unix_timestamp(func.now()) - 3600
+    ).order_by(
+        WindMeasurement.epoch.asc()
     )
 
     last_hour = [(float(row.avg), float(row.max)) for row in q.all()]
@@ -60,6 +62,8 @@ with session_manager.get_session() as session:
         WindMeasurement.max_mph.label('max')
     ).filter(
         WindMeasurement.epoch >= func.unix_timestamp(func.now()) - 86400
+    ).order_by(
+        WindMeasurement.epoch.asc()
     )
 
     last_day = [(float(row.avg), float(row.max)) for row in q.all()]
