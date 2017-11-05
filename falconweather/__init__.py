@@ -45,23 +45,34 @@ class WindResource(FalconWeatherResource):
     def on_get(self, req, resp):
         with self.db.get_session() as session:
             q = session.query(
+                func.avg(WindMeasurement.avg_mph).label('avg'),
                 func.max(WindMeasurement.max_mph).label('max')
             ).filter(
                 WindMeasurement.epoch >= func.unix_timestamp(func.now()) - 3600
             )
-            hour_max = q.one().max
+            r = q.one()
+            hour_avg = r.avg
+            hour_max = r.max
 
             q = session.query(
+                func.avg(WindMeasurement.avg_mph).label('avg'),
                 func.max(WindMeasurement.max_mph).label('max')
             ).filter(
                 WindMeasurement.epoch >= func.unix_timestamp(func.now()) - 86400
             )
-            day_max = q.one().max
+            r = q.one()
+            day_avg = r.avg
+            day_max = r.max
 
         # load and render template
         template = self.load_template('wind.j2')
         resp.content_type = 'text/html'
-        resp.body = template.render(hour_max=hour_max, day_max=day_max)
+        resp.body = template.render(
+            hour_max=hour_max,
+            hour_avg=hour_avg,
+            day_max=day_max,
+            day_avg=day_avg
+        )
 
     def on_post(self, req, resp):
         args = falcon_parser.parse(
