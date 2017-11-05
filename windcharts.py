@@ -129,6 +129,7 @@ if __name__ == '__main__':
             data = query_function(session)
 
         if isinstance(c, pygal.Pie):
+            print(data)
             for speed, count in data:
                 c.add(str(speed), count)
 
