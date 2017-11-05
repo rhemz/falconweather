@@ -37,21 +37,10 @@ def query_24h(session):
     return last_24h
 
 
-BASE_CHART = pygal.Config()
-BASE_CHART.height = 400
-BASE_CHART.width = 1024
-BASE_CHART.y_title = 'mph'
-# base_chart.interpolate = 'cubic'
-BASE_CHART.x_label_rotation = 20
-BASE_CHART.legend_at_bottom = True
-BASE_CHART.show_legend = False
-BASE_CHART.style = CleanStyle
-
-
 CHARTS = {
     # averages
     'avg_1h': {
-        'chart_type': pygal.Line,
+        'chart_type': pygal.StackedLine,
         'title': 'Average Wind Speed (1h)',
         'data_method': query_1h,
         'data_keys': {
@@ -91,6 +80,17 @@ CHARTS = {
         'data_label': 'Wind Speed'
     }
 }
+
+BASE_CHART = pygal.Config()
+BASE_CHART.height = 400
+BASE_CHART.width = 1024
+BASE_CHART.y_title = 'mph'
+# base_chart.interpolate = 'cubic'
+BASE_CHART.x_label_rotation = 20
+BASE_CHART.legend_at_bottom = True
+BASE_CHART.show_legend = False
+BASE_CHART.style = CleanStyle
+
 
 if __name__ == '__main__':
     for chart, attrs in CHARTS.items():
