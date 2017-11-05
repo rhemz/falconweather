@@ -196,7 +196,8 @@ if __name__ == '__main__':
         elif isinstance(c, pygal.SolidGauge):
             print(data)
             c.inner_radius = 0.60
-            c.width = int(BASE_CHART.height * 1.25)
+            c.height = 200
+            c.width = 300
             c.y_title = None
             c.half_pie = True
             c.value_formatter = lambda x: '{:.10g} mph'.format(x)
