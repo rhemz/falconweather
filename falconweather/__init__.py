@@ -87,7 +87,7 @@ session_manager = SessionManager(
         'pool_size':    1,
         'pool_recycle': 600,
         'max_overflow': 4,
-        'echo':         True,
+        'echo':         False,
         'echo_pool':    False
     }
 )
