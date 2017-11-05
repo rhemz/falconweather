@@ -44,25 +44,9 @@ class WindResource(FalconWeatherResource):
 
     def on_get(self, req, resp):
         with self.db.get_session() as session:
-            q = session.query(
-                func.avg(WindMeasurement.avg_mph).label('avg'),
-                func.max(WindMeasurement.max_mph).label('max')
-            ).filter(
-                WindMeasurement.epoch >= func.unix_timestamp(func.now()) - 3600
-            )
-            r = q.one()
-            hour_avg = r.avg
-            hour_max = r.max
-
-            q = session.query(
-                func.avg(WindMeasurement.avg_mph).label('avg'),
-                func.max(WindMeasurement.max_mph).label('max')
-            ).filter(
-                WindMeasurement.epoch >= func.unix_timestamp(func.now()) - 86400
-            )
-            r = q.one()
-            day_avg = r.avg
-            day_max = r.max
+            hour_avg, hour_max = self._get_avg_max(session, cutoff=3600)
+            day_avg, day_max = self._get_avg_max(session, cutoff=86400)
+            week_avg, week_max = self._get_avg_max(session, cutoff=86400 * 7)
 
             q = session.query(
                 WindMeasurement.max_mph.label('current')
@@ -79,6 +63,8 @@ class WindResource(FalconWeatherResource):
             hour_avg=hour_avg,
             day_max=day_max,
             day_avg=day_avg,
+            week_avg=week_avg,
+            week_max=week_max,
             current=current
         )
 
@@ -111,6 +97,16 @@ class WindResource(FalconWeatherResource):
             'avg_mph': avg,
             'max_mph': max
         }
+
+    def _get_avg_max(self, session, cutoff):
+        q = session.query(
+            func.avg(WindMeasurement.avg_mph).label('avg'),
+            func.max(WindMeasurement.max_mph).label('max')
+        ).filter(
+            WindMeasurement.epoch >= func.unix_timestamp(func.now()) - cutoff
+        )
+        r = q.one()
+        return r.avg, r.max
 
     def _parse_payload(self, value):
         avg, max = value.split('|')

@@ -60,6 +60,16 @@ CHARTS = {
         },
         'data_label': 'Wind Speed'
     },
+    'avg_7d': {
+        'chart_type': pygal.Line,
+        'title': 'Average Wind Speed (week)',
+        'data_method': query_wind_speeds,
+        'data_args': {'cutoff': 86400 * 7},
+        'data_keys': {
+            0: 'Average Speed'
+        },
+        'data_label': 'Wind Speed'
+    },
 
     # maxes
     'max_1h': {
@@ -83,11 +93,21 @@ CHARTS = {
         },
         'data_label': 'Wind Speed'
     },
+    'max_7d': {
+        'chart_type': pygal.Line,
+        'title': 'Average Wind Speed (week)',
+        'data_method': query_wind_speeds,
+        'data_args': {'cutoff': 86400 * 7},
+        'data_keys': {
+            1: 'Max Speed'
+        },
+        'data_label': 'Wind Speed'
+    },
 
     # other
     'grouped_1h': {
         'chart_type': pygal.Pie,
-        'title': 'Wind Speed Frequency (24h)',
+        'title': 'Wind Speed Frequency (1h)',
         'data_method': query_groups,
         'data_args': {'cutoff': 3600},
         'data_keys': {
