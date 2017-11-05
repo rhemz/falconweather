@@ -43,7 +43,7 @@ BASE_CHART.width = 1024
 BASE_CHART.y_title = 'mph'
 # base_chart.interpolate = 'cubic'
 BASE_CHART.x_label_rotation = 20
-BASE_CHART.show_legend = True
+BASE_CHART.show_legend = False
 BASE_CHART.style = CleanStyle
 
 
