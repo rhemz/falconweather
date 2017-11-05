@@ -67,6 +67,7 @@ if __name__ == '__main__':
         with session_manager.get_session() as session:
             query_function = globals()['query_{}'.format(chart)]
             data = query_function(session)
+            print(data)
 
         c.add(attrs['data_label'], data, show_dots=False)
 
