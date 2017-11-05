@@ -8,6 +8,8 @@ from marshmallow import fields
 from falconweather.db import SessionManager
 from falconweather.models import WindMeasurement
 
+import jinja2
+
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 
@@ -16,6 +18,11 @@ class FalconWeatherResource(object):
 
     def __init__(self, session_manager):
         self.db = session_manager
+
+    def load_template(self, name):
+        path = os.path.join('templates', name)
+        with open(os.path.abspath(path), 'r') as fp:
+            return jinja2.Template(fp.read())
 
 
 class WeatherResource(FalconWeatherResource):
@@ -36,7 +43,10 @@ class WeatherResource(FalconWeatherResource):
 class WindResource(FalconWeatherResource):
 
     def on_get(self, req, resp):
-        pass
+        template = self.load_template('wind.j2')
+
+        resp.content_type = 'text/html'
+        resp.body = template.render(something='testing')
 
     def on_post(self, req, resp):
         args = falcon_parser.parse(
