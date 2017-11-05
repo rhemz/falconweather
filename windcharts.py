@@ -48,6 +48,7 @@ BASE_CHART.style = CleanStyle
 
 
 CHARTS = {
+    # averages
     'avg_1h': {
         'chart_type': pygal.Line,
         'title': 'Average Wind Speed (1h)',
@@ -64,6 +65,27 @@ CHARTS = {
         'data_method': query_24h,
         'data_keys': {
             0: 'Average Speed'
+        },
+        'data_label': 'Wind Speed'
+    },
+
+    # maxes
+    'max_1h': {
+        'chart_type': pygal.Line,
+        'title': 'Average Wind Speed (1h)',
+        'data_method': query_1h,
+        'data_keys': {
+            1: 'Max Speed'
+        },
+        'data_label': 'Wind Speed',
+
+    },
+    'max_24h': {
+        'chart_type': pygal.Line,
+        'title': 'Average Wind Speed (24h)',
+        'data_method': query_24h,
+        'data_keys': {
+            1: 'Max Speed'
         },
         'data_label': 'Wind Speed'
     }
