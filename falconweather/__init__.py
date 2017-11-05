@@ -39,9 +39,7 @@ class WindResource(FalconWeatherResource):
 
     def on_post(self, req, resp):
         args = falcon_parser.parse(
-            argmap={
-                'mph': fields.String(required=True)  # fields.Float(required=True)
-            },
+            argmap={'mph': fields.String(required=True)},
             req=req,
             force_all=True
         )
@@ -52,14 +50,16 @@ class WindResource(FalconWeatherResource):
             session.add(
                 WindMeasurement(
                     epoch=int(time.time()),
-                    mph=max,
+                    avg_mph=avg,
+                    max_mph=max
                 )
             )
             session.flush()
 
         resp.media = {
             'status': 'ok',
-            'args': args,
+            'avg_mph': avg,
+            'max_mph': max
         }
 
     def _parse_payload(self, value):
