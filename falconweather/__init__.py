@@ -8,6 +8,7 @@ from marshmallow import fields
 from falconweather.db import SessionManager
 from falconweather.models import WindMeasurement
 
+from pymysql.err import IntegrityError
 from sqlalchemy import func
 
 
@@ -47,14 +48,19 @@ class WindResource(FalconWeatherResource):
         avg, max = self._parse_payload(args['mph'])
 
         with self.db.get_session(autocommit=True) as session:
-            session.add(
-                WindMeasurement(
-                    epoch=int(time.time()),
-                    avg_mph=avg,
-                    max_mph=max
+            try:
+                session.add(
+                    WindMeasurement(
+                        epoch=int(time.time()),
+                        avg_mph=avg,
+                        max_mph=max
+                    )
                 )
-            )
-            session.flush()
+                session.flush()
+            except IntegrityError:
+                # duplicate timestamp.  usually the particle cloud fucking up
+                print('duplicate particle request...')
+                pass
 
         resp.media = {
             'status': 'ok',
