@@ -79,7 +79,7 @@ if __name__ == '__main__':
             query_function = attrs['data_method']
             data = query_function(session)
 
-        for i, label in attrs['data'].items():
+        for i, label in attrs['data_keys'].items():
             c.add(label, [d[i] for d in data], show_dots=False)
         # c.add(attrs['data_label'], [d[0] for d in data], show_dots=False)
 
