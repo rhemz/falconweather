@@ -72,7 +72,7 @@ CHARTS = {
     # maxes
     'max_1h': {
         'chart_type': pygal.Line,
-        'title': 'Average Wind Speed (1h)',
+        'title': 'Maximum Wind Speed (1h)',
         'data_method': query_1h,
         'data_keys': {
             1: 'Max Speed'
@@ -82,7 +82,7 @@ CHARTS = {
     },
     'max_24h': {
         'chart_type': pygal.Line,
-        'title': 'Average Wind Speed (24h)',
+        'title': 'Maximum Wind Speed (24h)',
         'data_method': query_24h,
         'data_keys': {
             1: 'Max Speed'
