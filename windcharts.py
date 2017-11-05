@@ -194,8 +194,7 @@ if __name__ == '__main__':
 
         # gauges
         elif isinstance(c, pygal.SolidGauge):
-            print(data)
-            c.inner_radius = 0.60
+            c.inner_radius = 0.55
             c.width = BASE_CHART.height
             c.y_title = None
             c.x_title = None
