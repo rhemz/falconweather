@@ -90,7 +90,7 @@ BASE_CHART.x_label_rotation = 20
 BASE_CHART.legend_at_bottom = True
 BASE_CHART.show_legend = False
 BASE_CHART.style = CleanStyle
-BASE_CHART.fill = True
+BASE_CHART.fill = False
 
 
 if __name__ == '__main__':
