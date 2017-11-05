@@ -9,26 +9,12 @@ from pygal.style import CleanStyle
 from sqlalchemy import func
 
 
-def query_1h(session):
+def query_wind_speeds(session, cutoff):
     q = session.query(
         WindMeasurement.avg_mph.label('avg'),
         WindMeasurement.max_mph.label('max')
     ).filter(
-        WindMeasurement.epoch >= func.unix_timestamp(func.now()) - 3600
-    ).order_by(
-        WindMeasurement.epoch.asc()
-    )
-
-    last_1h = [(float(row.avg), float(row.max)) for row in q.all()]
-    return last_1h
-
-
-def query_24h(session):
-    q = session.query(
-        WindMeasurement.avg_mph.label('avg'),
-        WindMeasurement.max_mph.label('max')
-    ).filter(
-        WindMeasurement.epoch >= func.unix_timestamp(func.now()) - 86400
+        WindMeasurement.epoch >= func.unix_timestamp(func.now()) - cutoff
     ).order_by(
         WindMeasurement.epoch.asc()
     )
@@ -37,12 +23,12 @@ def query_24h(session):
     return last_24h
 
 
-def query_24h_groups(session):
+def query_groups(session, cutoff):
     q = session.query(
         func.round(WindMeasurement.avg_mph).label('avg'),
         func.count(WindMeasurement.avg_mph).label('count')
     ).filter(
-        WindMeasurement.epoch >= func.unix_timestamp(func.now()) - 86400
+        WindMeasurement.epoch >= func.unix_timestamp(func.now()) - cutoff
     ).group_by(
         func.round(WindMeasurement.avg_mph)
     )
@@ -56,7 +42,8 @@ CHARTS = {
     'avg_1h': {
         'chart_type': pygal.Line,
         'title': 'Average Wind Speed (1h)',
-        'data_method': query_1h,
+        'data_method': query_wind_speeds,
+        'data_args': {'cutoff': 3600},
         'data_keys': {
             0: 'Average Speed'
         },
@@ -66,7 +53,8 @@ CHARTS = {
     'avg_24h': {
         'chart_type': pygal.Line,
         'title': 'Average Wind Speed (24h)',
-        'data_method': query_24h,
+        'data_method': query_wind_speeds,
+        'data_args': {'cutoff': 86400},
         'data_keys': {
             0: 'Average Speed'
         },
@@ -77,7 +65,8 @@ CHARTS = {
     'max_1h': {
         'chart_type': pygal.Line,
         'title': 'Maximum Wind Speed (1h)',
-        'data_method': query_1h,
+        'data_method': query_wind_speeds,
+        'data_args': {'cutoff': 3600},
         'data_keys': {
             1: 'Max Speed'
         },
@@ -87,7 +76,8 @@ CHARTS = {
     'max_24h': {
         'chart_type': pygal.Line,
         'title': 'Maximum Wind Speed (24h)',
-        'data_method': query_24h,
+        'data_method': query_wind_speeds,
+        'data_args': {'cutoff': 86400},
         'data_keys': {
             1: 'Max Speed'
         },
@@ -98,7 +88,8 @@ CHARTS = {
     'grouped_24h': {
         'chart_type': pygal.Pie,
         'title': 'Wind Speed Frequency (24h)',
-        'data_method': query_24h_groups,
+        'data_method': query_groups,
+        'data_args': {'cutoff': 86400},
         'data_keys': {
             0: 'Wind Speeds'
         },
@@ -126,7 +117,7 @@ if __name__ == '__main__':
         with session_manager.get_session() as session:
             # query_function = globals()['query_{}'.format(chart)]
             query_function = attrs['data_method']
-            data = query_function(session)
+            data = query_function(session, **attrs['data_args'])
 
         # pie charts
         if isinstance(c, pygal.Pie):
