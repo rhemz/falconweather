@@ -14,6 +14,9 @@ from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 
 
+SITE_ADDR = os.environ.get('FALCONWEATHER_SITE', '')
+
+
 class FalconWeatherResource(object):
 
     def __init__(self, session_manager):
@@ -36,7 +39,8 @@ class WeatherResource(FalconWeatherResource):
 
         resp.media = {
             'status': 'ok',
-            'wind_measurements': wind_count
+            'wind_measurements': wind_count,
+            'wind_href': '{}/wind'.format(SITE_ADDR)
         }
 
 
@@ -87,13 +91,15 @@ class WindResource(FalconWeatherResource):
                     )
                 )
                 session.commit()
+                status = 'ok'
             except IntegrityError:
                 # duplicate timestamp.  usually the particle cloud fucking up
                 print('duplicate particle request...')
+                status = 'duplicate'
                 pass
 
         resp.media = {
-            'status': 'ok',
+            'status': status,
             'avg_mph': avg,
             'max_mph': max
         }
