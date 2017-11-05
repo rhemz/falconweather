@@ -39,7 +39,7 @@ def query_24h(session):
 
 def query_24h_groups(session):
     q = session.query(
-        WindMeasurement.avg_mph.label('avg'),
+        func.round(WindMeasurement.avg_mph).label('avg'),
         func.count(WindMeasurement.avg_mph).label('count')
     ).filter(
         WindMeasurement.epoch >= func.unix_timestamp(func.now()) - 86400
