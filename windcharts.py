@@ -135,7 +135,6 @@ if __name__ == '__main__':
 
             c.width = int(BASE_CHART.height * 1.25)
             c.show_legend = True
-            c.y
 
         elif isinstance(c, pygal.Line) or isinstance(c, pygal.StackedLine):
             for i, label in attrs['data_keys'].items():
