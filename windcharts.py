@@ -45,7 +45,7 @@ def query_24h_groups(session):
         WindMeasurement.epoch >= func.unix_timestamp(func.now()) - 86400
     ).group_by(
         func.round(WindMeasurement.avg_mph)
-    ).distinct()
+    )
 
     averages = [(int(row.avg), int(row.count)) for row in q.all()]
     return averages
@@ -135,6 +135,7 @@ if __name__ == '__main__':
 
             c.width = int(BASE_CHART.height * 1.25)
             c.show_legend = True
+            c.y
 
         elif isinstance(c, pygal.Line) or isinstance(c, pygal.StackedLine):
             for i, label in attrs['data_keys'].items():
