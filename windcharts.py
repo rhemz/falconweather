@@ -37,6 +37,19 @@ def query_24h(session):
     return last_24h
 
 
+def query_24h_groups(session):
+    q = session.query(
+        WindMeasurement.avg_mph.label('avg'),
+        func.count(WindMeasurement.avg_mph).label('count')
+    ).filter(
+        WindMeasurement.epoch >= func.unix_timestamp(func.now()) - 86400
+    ).group_by(
+        func.round(WindMeasurement.avg_mph)
+    )
+
+    averages = [(int(row.avg), int(row.count)) for row in q.all()]
+
+
 CHARTS = {
     # averages
     'avg_1h': {
@@ -78,7 +91,18 @@ CHARTS = {
             1: 'Max Speed'
         },
         'data_label': 'Wind Speed'
-    }
+    },
+
+    # other
+    'grouped_24h': {
+        'chart_type': pygal.Pie,
+        'title': 'Wind Speeds (24h)',
+        'data_method': query_24h_groups,
+        'data_keys': {
+            0: 'Wind Speeds'
+        },
+        'data_label': 'Wind Speed'
+    },
 }
 
 BASE_CHART = pygal.Config()
