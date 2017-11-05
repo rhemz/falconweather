@@ -135,11 +135,11 @@ if __name__ == '__main__':
 
             c.width = int(BASE_CHART.height * 1.25)
             c.show_legend = True
+            c.y_title = None
 
         elif isinstance(c, pygal.Line) or isinstance(c, pygal.StackedLine):
             for i, label in attrs['data_keys'].items():
                 c.add(label, [d[i] for d in data], show_dots=False)
-                # c.add(attrs['data_label'], [d[0] for d in data], show_dots=False)
 
         c.render_to_file('/srv/www/net.8harvest.weather/public/wind_{}.svg'.format(chart))
         c.render_to_png('/srv/www/net.8harvest.weather/public/wind_{}.png'.format(chart))
