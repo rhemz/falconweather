@@ -39,7 +39,7 @@ class WeatherResource(FalconWeatherResource):
 
         resp.media = {
             'status': 'ok',
-            'wind_measurements': wind_count,
+            'wind_measurements': wind_count * 2,  # avg, max for each interval
             'wind_href': '{}/wind'.format(SITE_ADDR)
         }
 
