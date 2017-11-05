@@ -49,7 +49,6 @@ class WindResource(FalconWeatherResource):
 
         with self.db.get_session() as session:
             try:
-                session.begin()
                 session.add(
                     WindMeasurement(
                         epoch=int(time.time()),
