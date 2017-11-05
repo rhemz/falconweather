@@ -34,20 +34,25 @@ class WeatherResource(FalconWeatherResource):
 
 class WindResource(FalconWeatherResource):
 
+    def on_get(self, req, resp):
+        pass
+
     def on_post(self, req, resp):
         args = falcon_parser.parse(
             argmap={
-                'mph': fields.Float(required=True)
+                'mph': fields.String(required=True)  # fields.Float(required=True)
             },
             req=req,
             force_all=True
         )
 
+        avg, max = self._parse_payload(args['mph'])
+
         with self.db.get_session(autocommit=True) as session:
             session.add(
                 WindMeasurement(
                     epoch=int(time.time()),
-                    mph=args['mph'],
+                    mph=max,
                 )
             )
             session.flush()
@@ -56,6 +61,11 @@ class WindResource(FalconWeatherResource):
             'status': 'ok',
             'args': args,
         }
+
+    def _parse_payload(self, value):
+        avg, max = value.split('|')
+
+        return float(avg), float(max)
 
 
 # start
