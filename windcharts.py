@@ -9,7 +9,7 @@ from pygal.style import CleanStyle
 from sqlalchemy import func
 
 
-def query_avg_1h(session):
+def query_1h(session):
     q = session.query(
         WindMeasurement.avg_mph.label('avg'),
         WindMeasurement.max_mph.label('max')
@@ -23,7 +23,7 @@ def query_avg_1h(session):
     return last_1h
 
 
-def query_avg_24h(session):
+def query_24h(session):
     q = session.query(
         WindMeasurement.avg_mph.label('avg'),
         WindMeasurement.max_mph.label('max')
@@ -51,20 +51,20 @@ CHARTS = {
     'avg_1h': {
         'chart_type': pygal.Line,
         'title': 'Average Wind Speed (1h)',
-        'data': [
-            'Average Speed',
-            'Max Gusts'
-        ],
+        'data_method': query_1h,
+        'data_keys': {
+            0: 'Average Speed'
+        },
         'data_label': 'Wind Speed',
 
     },
     'avg_24h': {
         'chart_type': pygal.Line,
         'title': 'Average Wind Speed (24h)',
-        'data': [
-            'Average Speed',
-            'Max Gusts'
-        ],
+        'data_method': query_24h,
+        'data_keys': {
+            0: 'Average Speed'
+        },
         'data_label': 'Wind Speed'
     }
 }
@@ -75,10 +75,11 @@ if __name__ == '__main__':
         c.title = attrs['title']
 
         with session_manager.get_session() as session:
-            query_function = globals()['query_{}'.format(chart)]
+            # query_function = globals()['query_{}'.format(chart)]
+            query_function = attrs['data_method']
             data = query_function(session)
 
-        for i, label in enumerate(attrs['data']):
+        for i, label in attrs['data'].items():
             c.add(label, [d[i] for d in data], show_dots=False)
         # c.add(attrs['data_label'], [d[0] for d in data], show_dots=False)
 
