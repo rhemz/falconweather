@@ -130,13 +130,13 @@ if __name__ == '__main__':
 
         # pie charts
         if isinstance(c, pygal.Pie):
-            print(data)
             for speed, count in data:
-                c.add('{} {}'.format(str(speed), BASE_CHART.y_title), count, inner_radius=(len(data) - count) / len(data))
+                c.add('{} {}'.format(str(speed), BASE_CHART.y_title), count)
 
             c.width = int(BASE_CHART.height * 1.25)
             c.show_legend = True
             c.y_title = None
+            c.inner_radius = 0.4
 
         # line charts
         elif isinstance(c, pygal.Line) or isinstance(c, pygal.StackedLine):
