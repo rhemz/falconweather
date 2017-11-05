@@ -97,7 +97,7 @@ CHARTS = {
     # other
     'grouped_24h': {
         'chart_type': pygal.Pie,
-        'title': 'Wind Speeds (24h)',
+        'title': 'Wind Speed Frequency (24h)',
         'data_method': query_24h_groups,
         'data_keys': {
             0: 'Wind Speeds'
@@ -136,7 +136,7 @@ if __name__ == '__main__':
             c.width = int(BASE_CHART.height * 1.25)
             c.show_legend = True
             c.y_title = None
-            c.inner_radius = 0.4
+            # c.inner_radius = 0.4
 
         # line charts
         elif isinstance(c, pygal.Line) or isinstance(c, pygal.StackedLine):
