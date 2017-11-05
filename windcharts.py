@@ -53,8 +53,8 @@ line_chart.height = 250
 
 line_chart.add('Wind Speed', [x[0] for x in last_hour], show_dots=False)
 
-line_chart.render_to_file('../public/wind_avg_1h.svg', show_legend=False)
-line_chart.render_to_png('../publbic/wind_avg_1h.png', show_legend=False)
+line_chart.render_to_file('/srv/www/net.8harvest.weather/public/wind_avg_1h.svg', show_legend=False)
+line_chart.render_to_png('/srv/www/net.8harvest.weather/public/wind_avg_1h.png', show_legend=False)
 
 
 
@@ -82,5 +82,5 @@ line_chart.height = 250
 
 line_chart.add('Wind Speed', [x[0] for x in last_day], show_dots=False)
 
-line_chart.render_to_file('../public/wind_avg_24h.svg', show_legend=False)
-line_chart.render_to_png('../public/wind_avg_24h.png', show_legend=False)
+line_chart.render_to_file('/srv/www/net.8harvest.weather/public/wind_avg_24h.svg', show_legend=False)
+line_chart.render_to_png('/srv/www/net.8harvest.weather/public//wind_avg_24h.png', show_legend=False)
