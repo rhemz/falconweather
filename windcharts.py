@@ -194,7 +194,9 @@ if __name__ == '__main__':
 
         # gauges
         elif isinstance(c, pygal.SolidGauge):
-            c.inner_radius = 0.70
+            c.inner_radius = 0.60
+            c.width = int(BASE_CHART.height * 1.25)
+            c.y_title = None
             c.value_formatter = lambda x: '{:.10g}%'.format(x)
 
             c.add('current vs max', [{'value': data[0], 'max_value': data[1]}])
