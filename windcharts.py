@@ -26,6 +26,7 @@ last_day = None
 last_week = None
 last_month = None
 
+# last hour
 with session_manager.get_session() as session:
     q = session.query(
         WindMeasurement.avg_mph.label('avg'),
@@ -45,13 +46,34 @@ line_chart.title = 'Average Wind Speed (1h)'
 line_chart.y_title = 'mph'
 line_chart.height = 250
 
-line_chart.x_labels = map(lambda d: d.strftime('%Y-%m-%d'), [
- datetime(2013, 1, 2),
- datetime(2013, 1, 12),
- datetime(2013, 2, 2),
- datetime(2013, 2, 22)])
-
 line_chart.add('Wind Speed', [x[0] for x in last_hour], show_dots=False)
 
-line_chart.render_to_file('wind_avg_1h.svg', show_legend=False)
+# line_chart.render_to_file('wind_avg_1h.svg', show_legend=False)
 line_chart.render_to_png('wind_avg_1h.png', show_legend=False)
+
+
+
+# last day
+with session_manager.get_session() as session:
+    q = session.query(
+        WindMeasurement.avg_mph.label('avg'),
+        WindMeasurement.max_mph.label('max')
+    ).filter(
+        WindMeasurement.epoch >= func.unix_timestamp(func.now()) - 86400
+    )
+
+    last_day = [(float(row.avg), float(row.max)) for row in q.all()]
+
+line_chart = pygal.Line(
+    x_label_rotation=20,
+    style=LightStyle,
+    # interpolate='cubic'
+)
+line_chart.title = 'Average Wind Speed (24h)'
+line_chart.y_title = 'mph'
+line_chart.height = 250
+
+line_chart.add('Wind Speed', [x[0] for x in last_day], show_dots=False)
+
+# line_chart.render_to_file('wind_avg_1h.svg', show_legend=False)
+line_chart.render_to_png('wind_avg_24h.png', show_legend=False)
