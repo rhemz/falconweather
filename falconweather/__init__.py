@@ -47,8 +47,9 @@ class WindResource(FalconWeatherResource):
 
         avg, max = self._parse_payload(args['mph'])
 
-        with self.db.get_session(autocommit=True) as session:
-            try:
+        try:
+            with self.db.get_session(autocommit=True) as session:
+
                 session.add(
                     WindMeasurement(
                         epoch=int(time.time()),
@@ -57,10 +58,10 @@ class WindResource(FalconWeatherResource):
                     )
                 )
                 session.flush()
-            except IntegrityError:
-                # duplicate timestamp.  usually the particle cloud fucking up
-                print('duplicate particle request...')
-                pass
+        except IntegrityError:
+            # duplicate timestamp.  usually the particle cloud fucking up
+            print('duplicate particle request...')
+            pass
 
         resp.media = {
             'status': 'ok',
