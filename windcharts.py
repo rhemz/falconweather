@@ -69,7 +69,7 @@ if __name__ == '__main__':
             data = query_function(session)
             print(data)
 
-        c.add(attrs['data_label'], data, show_dots=False)
+        c.add(attrs['data_label'], [d[0] for d in data], show_dots=False)
 
         c.render_to_file('/srv/www/net.8harvest.weather/public/wind_{}.svg'.format(chart), show_legend=False)
         c.render_to_png('/srv/www/net.8harvest.weather/public/wind_{}.png'.format(chart), show_legend=False)
