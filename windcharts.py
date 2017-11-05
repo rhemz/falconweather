@@ -48,6 +48,7 @@ def query_24h_groups(session):
     )
 
     averages = [(int(row.avg), int(row.count)) for row in q.all()]
+    return averages
 
 
 CHARTS = {
