@@ -52,7 +52,7 @@ def query_current_vs_max(session, cutoff):
     )
     max = q.one().max
 
-    return current, max
+    return float(current), float(max)
 
 
 CHARTS = {
