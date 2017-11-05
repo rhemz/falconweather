@@ -133,7 +133,7 @@ if __name__ == '__main__':
             for speed, count in data:
                 c.add('{} {}'.format(str(speed), BASE_CHART.y_title), count)
 
-            c.width = BASE_CHART.height
+            c.width = int(BASE_CHART.height * 1.25)
             c.show_legend = True
 
         elif isinstance(c, pygal.Line) or isinstance(c, pygal.StackedLine):
