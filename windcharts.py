@@ -132,7 +132,7 @@ if __name__ == '__main__':
         if isinstance(c, pygal.Pie):
             print(data)
             for speed, count in data:
-                c.add('{} {}'.format(str(speed), BASE_CHART.y_title), count, inner_radius=count)
+                c.add('{} {}'.format(str(speed), BASE_CHART.y_title), count, inner_radius=(len(data) - count) / len(data))
 
             c.width = int(BASE_CHART.height * 1.25)
             c.show_legend = True
