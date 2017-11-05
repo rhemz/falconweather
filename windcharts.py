@@ -144,7 +144,7 @@ CHARTS = {
         'data_label': 'Wind Speed'
     },
     'current_vs_24h': {
-        'chart_type': pygal.Pie,
+        'chart_type': pygal.SolidGauge,
         'title': 'Current Speed vs. 24h High',
         'data_method': query_current_vs_max,
         'data_args': {'cutoff': 86400},
