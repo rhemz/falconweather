@@ -43,6 +43,7 @@ BASE_CHART.width = 1024
 BASE_CHART.y_title = 'mph'
 # base_chart.interpolate = 'cubic'
 BASE_CHART.x_label_rotation = 20
+BASE_CHART.show_legend = True
 BASE_CHART.style = CleanStyle
 
 
@@ -50,11 +51,20 @@ CHARTS = {
     'avg_1h': {
         'chart_type': pygal.Line,
         'title': 'Average Wind Speed (1h)',
-        'data_label': 'Wind Speed'
+        'data': [
+            'Average Speed',
+            'Max Gusts'
+        ],
+        'data_label': 'Wind Speed',
+
     },
     'avg_24h': {
         'chart_type': pygal.Line,
         'title': 'Average Wind Speed (24h)',
+        'data': [
+            'Average Speed',
+            'Max Gusts'
+        ],
         'data_label': 'Wind Speed'
     }
 }
@@ -67,9 +77,10 @@ if __name__ == '__main__':
         with session_manager.get_session() as session:
             query_function = globals()['query_{}'.format(chart)]
             data = query_function(session)
-            print(data)
 
-        c.add(attrs['data_label'], [d[0] for d in data], show_dots=False)
+        for i, label in enumerate(attrs['data']):
+            c.add(label, [d[i] for d in data], show_dots=False)
+        # c.add(attrs['data_label'], [d[0] for d in data], show_dots=False)
 
-        c.render_to_file('/srv/www/net.8harvest.weather/public/wind_{}.svg'.format(chart), show_legend=False)
-        c.render_to_png('/srv/www/net.8harvest.weather/public/wind_{}.png'.format(chart), show_legend=False)
+        c.render_to_file('/srv/www/net.8harvest.weather/public/wind_{}.svg'.format(chart))
+        c.render_to_png('/srv/www/net.8harvest.weather/public/wind_{}.png'.format(chart))
