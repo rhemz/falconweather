@@ -55,7 +55,7 @@ class WindResource(FalconWeatherResource):
             week_avg, week_max = self._get_avg_max(session, cutoff=86400 * 7)
 
             q = session.query(
-                WindMeasurement.max_mph.label('current')
+                ((WindMeasurement.max_mph + WindMeasurement.max_mph) / 2).label('current')
             ).order_by(
                 WindMeasurement.epoch.desc()
             ).limit(1)
