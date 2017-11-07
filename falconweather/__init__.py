@@ -51,6 +51,7 @@ class WindResource(FalconWeatherResource):
             one_min_avg, one_min_max = self._get_avg_max(session, cutoff=60)
             ten_min_avg, ten_min_max = self._get_avg_max(session, cutoff=600)
             hour_avg, hour_max = self._get_avg_max(session, cutoff=3600)
+            twelve_hour_avg, twelve_hour_max = self._get_avg_max(session, cutoff=3600)
             day_avg, day_max = self._get_avg_max(session, cutoff=86400)
             week_avg, week_max = self._get_avg_max(session, cutoff=86400 * 7)
 
@@ -69,6 +70,7 @@ class WindResource(FalconWeatherResource):
             one_min=(one_min_avg, one_min_max),
             ten_min=(ten_min_avg, ten_min_max),
             hour=(hour_avg, hour_max),
+            twelve_hour=(twelve_hour_avg, twelve_hour_max),
             day=(day_avg, day_max),
             week=(week_avg, week_max),
         )
