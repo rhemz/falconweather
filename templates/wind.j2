@@ -3,7 +3,7 @@
 <style type="text/css">
 .fw  {border-collapse:collapse;border-spacing:0;}
 .fw td{font-family:Arial, sans-serif;font-size:14px;padding:10px 15px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
-.fw th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 15px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.fw th{font-family:Arial, sans-serif;font-size:14px;font-weight:bold;padding:10px 15px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
 .fw .fw-yw4l{vertical-align:top}
 </style>
 <table class="fw">
@@ -13,9 +13,9 @@
     <th class="fw-yw4l">Highest Gust</th>
   </tr>
   <tr>
-    <td class="fw-yw4l">1h</td>
-    <td class="fw-yw4l">{{ hour[0]|round(1) }}</td>
-    <td class="fw-yw4l">{{ hour[1]|round(1) }}</td>
+    <td class="fw-yw4l"><b>1h</b></td>
+    <td class="fw-yw4l">{{ hour[0]|round(1) }}mph</td>
+    <td class="fw-yw4l">{{ hour[1]|round(1) }}mph</td>
   </tr>
   <tr>
     <td class="fw-yw4l"></td>
