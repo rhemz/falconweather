@@ -123,26 +123,26 @@ CHARTS = {
     },
 
     # other
-    'grouped_1h': {
-        'chart_type': pygal.Pie,
-        'title': 'Wind Speed Frequency (1h)',
-        'data_method': query_groups,
-        'data_args': {'cutoff': 3600},
-        'data_keys': {
-            0: 'Wind Speeds'
-        },
-        'data_label': 'Wind Speed'
-    },
-    'grouped_24h': {
-        'chart_type': pygal.Pie,
-        'title': 'Wind Speed Frequency (24h)',
-        'data_method': query_groups,
-        'data_args': {'cutoff': 86400},
-        'data_keys': {
-            0: 'Wind Speeds'
-        },
-        'data_label': 'Wind Speed'
-    },
+    # 'grouped_1h': {
+    #     'chart_type': pygal.Pie,
+    #     'title': 'Wind Speed Frequency (1h)',
+    #     'data_method': query_groups,
+    #     'data_args': {'cutoff': 3600},
+    #     'data_keys': {
+    #         0: 'Wind Speeds'
+    #     },
+    #     'data_label': 'Wind Speed'
+    # },
+    # 'grouped_24h': {
+    #     'chart_type': pygal.Pie,
+    #     'title': 'Wind Speed Frequency (24h)',
+    #     'data_method': query_groups,
+    #     'data_args': {'cutoff': 86400},
+    #     'data_keys': {
+    #         0: 'Wind Speeds'
+    #     },
+    #     'data_label': 'Wind Speed'
+    # },
     'current_vs_24h': {
         'chart_type': pygal.SolidGauge,
         'title': 'Current Speed vs. 24h High',

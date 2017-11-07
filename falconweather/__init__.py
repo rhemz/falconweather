@@ -48,6 +48,7 @@ class WindResource(FalconWeatherResource):
 
     def on_get(self, req, resp):
         with self.db.get_session() as session:
+            ten_min_avg, ten_min_max = self._get_avg_max(session, cutoff=600)
             hour_avg, hour_max = self._get_avg_max(session, cutoff=3600)
             day_avg, day_max = self._get_avg_max(session, cutoff=86400)
             week_avg, week_max = self._get_avg_max(session, cutoff=86400 * 7)
@@ -63,13 +64,11 @@ class WindResource(FalconWeatherResource):
         template = self.load_template('wind.j2')
         resp.content_type = 'text/html'
         resp.body = template.render(
-            hour_max=hour_max,
-            hour_avg=hour_avg,
-            day_max=day_max,
-            day_avg=day_avg,
-            week_avg=week_avg,
-            week_max=week_max,
-            current=current
+            ten_min=(ten_min_avg, ten_min_max),
+            hour=(hour_avg, hour_max),
+            day=(day_avg, day_max),
+            week=(week_avg, week_max),
+            current=current,
         )
 
     def on_post(self, req, resp):
