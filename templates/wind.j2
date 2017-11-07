@@ -13,47 +13,28 @@
     <th class="fw-yw4l">Highest Gust</th>
   </tr>
   <tr>
-    <td class="fw-yw4l"><b>1h</b></td>
+    <td class="fw-yw4l"><b>10 min</b></td>
+    <td class="fw-yw4l">{{ ten_min[0]|round(1) }}mph</td>
+    <td class="fw-yw4l">{{ ten_min[1]|round(1) }}mph</td>
+  </tr>
+  <tr>
+    <td class="fw-yw4l"><b>1 hour</b></td>
     <td class="fw-yw4l">{{ hour[0]|round(1) }}mph</td>
     <td class="fw-yw4l">{{ hour[1]|round(1) }}mph</td>
   </tr>
   <tr>
-    <td class="fw-yw4l"></td>
-    <td class="fw-yw4l"></td>
-    <td class="fw-yw4l"></td>
+    <td class="fw-yw4l"><b>24 hour</b></td>
+    <td class="fw-yw4l">{{ day[0]|round(1) }}mph</td>
+    <td class="fw-yw4l">{{ day[1]|round(1) }}mph</td>
   </tr>
   <tr>
-    <td class="fw-yw4l"></td>
-    <td class="fw-yw4l"></td>
-    <td class="fw-yw4l"></td>
+    <td class="fw-yw4l"><b>7 day</b></td>
+    <td class="fw-yw4l">{{ week[0]|round(1) }}mph</td>
+    <td class="fw-yw4l">{{ week[1]|round(1) }}mph</td>
   </tr>
-  <tr>
-    <td class="fw-yw4l"></td>
-    <td class="fw-yw4l"></td>
-    <td class="fw-yw4l"></td>
-  </tr>
-  <tr>
-    <td class="fw-yw4l"></td>
-    <td class="fw-yw4l"></td>
-    <td class="fw-yw4l"></td>
-  </tr>
+
 </table>
 
-Current wind speed: {{ current|round(1) }}mph
-<br />
-Avg wind speed (1h): {{ hour[0]|round(1) }}mph
-<br />
-Max gust (1h): {{ hour[1]|round(1) }}mph
-<br />
-Avg wind speed (24h): {{ day[0]|round(1) }}mph
-<br />
-Max gust (24h): {{ day[1]|round(1) }}mph
-<br />
-Avg wind (week): {{ week[0]|round(1) }}mph
-<br />
-Max gust (week): {{ week[1]|round(1) }}mph
-<br />
-<br />
 
 <img src="/wind_current_vs_24h.png" />
 <br />
