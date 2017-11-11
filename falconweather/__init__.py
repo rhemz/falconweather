@@ -16,6 +16,8 @@ from sqlalchemy.exc import IntegrityError
 
 SITE_ADDR = os.environ.get('FALCONWEATHER_SITE', '')
 
+ERROR_THRESHOLD = 90
+
 
 class FalconWeatherResource(object):
 
@@ -83,6 +85,9 @@ class WindResource(FalconWeatherResource):
         )
 
         avg, max = self._parse_payload(args['mph'])
+
+        if max >= ERROR_THRESHOLD:
+            print('Likely erroneous measurement, discarding... {}'.format(args))
 
         with self.db.get_session() as session:
             try:

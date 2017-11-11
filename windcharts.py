@@ -1,4 +1,7 @@
 from datetime import datetime, timedelta
+import os
+import sys
+import time
 
 from falconweather import session_manager
 from falconweather.models import WindMeasurement
@@ -55,8 +58,40 @@ def query_current_vs_max(session, cutoff):
     return float(current), float(max)
 
 
+def query_by_grouped_time(session, cutoff, column, group_func=func.date, sql_func=func.avg):
+    q = session.query(
+        sql_func(column).label('value'),
+        group_func(func.from_unixtime(WindMeasurement.epoch)).label('date')
+    ).filter(
+        WindMeasurement.epoch >= func.unix_timestamp(func.now()) - cutoff,
+        column >= 1
+    ).group_by(
+        'date'
+    ).order_by(
+        'date'
+    )
+
+    grouped_values = [(float(row.value), row.date) for row in q.all()]
+    return grouped_values
+
+
+def days_epoch(num_days):
+    return 86400 * (int(time.time() / 86400) + num_days)
+
+
 CHARTS = {
     # averages
+    'avg_10m': {
+        'chart_type': pygal.Line,
+        'title': 'Average Wind Speed (10m)',
+        'data_method': query_wind_speeds,
+        'data_args': {'cutoff': 600},
+        'data_keys': {
+            0: 'Average Speed'
+        },
+        'data_label': 'Wind Speed',
+
+    },
     'avg_1h': {
         'chart_type': pygal.Line,
         'title': 'Average Wind Speed (1h)',
@@ -90,6 +125,17 @@ CHARTS = {
     },
 
     # maxes
+    'max_10m': {
+        'chart_type': pygal.Line,
+        'title': 'Maximum Wind Speed (10m)',
+        'data_method': query_wind_speeds,
+        'data_args': {'cutoff': 600},
+        'data_keys': {
+            1: 'Max Speed'
+        },
+        'data_label': 'Wind Speed',
+
+    },
     'max_1h': {
         'chart_type': pygal.Line,
         'title': 'Maximum Wind Speed (1h)',
@@ -143,6 +189,30 @@ CHARTS = {
     #     },
     #     'data_label': 'Wind Speed'
     # },
+    'daily_avg_7d': {
+        'chart_type': pygal.HorizontalBar,
+        'title': 'Daily Average (week)',
+        'data_method': query_by_grouped_time,
+        'data_args': {
+            'cutoff': 7 * 86400,
+            'column': WindMeasurement.avg_mph,
+            'group_func': func.day,
+            'sql_func': func.avg
+        },
+        'data_label': 'Wind Speed'
+    },
+    'daily_max_7d': {
+        'chart_type': pygal.HorizontalBar,
+        'title': 'Daily Max (week)',
+        'data_method': query_by_grouped_time,
+        'data_args': {
+            'cutoff': 7 * 86400,
+            'column': WindMeasurement.max_mph,
+            'group_func': func.day,
+            'sql_func': func.max
+        },
+        'data_label': 'Wind Speed'
+    },
     'current_vs_24h': {
         'chart_type': pygal.SolidGauge,
         'title': 'Current Speed vs. 24h High',
@@ -159,7 +229,7 @@ BASE_CHART = pygal.Config()
 BASE_CHART.height = 400
 BASE_CHART.width = 1200
 BASE_CHART.y_title = 'mph'
-# base_chart.interpolate = 'cubic'
+# BASE_CHART.interpolate = 'cubic'
 BASE_CHART.x_label_rotation = 20
 BASE_CHART.legend_at_bottom = True
 BASE_CHART.show_legend = False
@@ -168,13 +238,17 @@ BASE_CHART.fill = False
 
 
 if __name__ == '__main__':
+    write_path = os.environ.get('FALCONWEATHER_CHART_PATH', None)
+    if write_path is None:
+        sys.exit('FALCONWEATHER_CHART_PATH not set')
+
     for chart, attrs in CHARTS.items():
         c = attrs['chart_type'](BASE_CHART)
         c.title = attrs['title']
 
         # call data function
         with session_manager.get_session() as session:
-            # query_function = globals()['query_{}'.format(chart)]
+
             query_function = attrs['data_method']
             data = query_function(session, **attrs['data_args'])
 
@@ -203,5 +277,11 @@ if __name__ == '__main__':
 
             c.add('current vs max', [{'value': data[0], 'max_value': data[1]}])
 
-        c.render_to_file('/srv/www/net.8harvest.weather/public/wind_{}.svg'.format(chart))
-        c.render_to_png('/srv/www/net.8harvest.weather/public/wind_{}.png'.format(chart))
+        elif isinstance(c, pygal.HorizontalBar) or isinstance(c, pygal.Bar):
+            c.y_title = None
+
+            for value, time_label in data:
+                c.add(time_label, value)
+
+        c.render_to_file(os.path.join(write_path, 'wind_{}.svg'.format(chart)))
+        c.render_to_png(os.path.join(write_path, 'wind_{}.png'.format(chart)))
