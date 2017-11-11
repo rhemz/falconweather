@@ -67,15 +67,21 @@ class WindResource(FalconWeatherResource):
         # load and render template
         template = self.load_template('wind.j2')
         resp.content_type = 'text/html'
-        resp.body = template.render(
-            current=current,
-            one_min=(one_min_avg, one_min_max),
-            ten_min=(ten_min_avg, ten_min_max),
-            hour=(hour_avg, hour_max),
-            twelve_hour=(twelve_hour_avg, twelve_hour_max),
-            day=(day_avg, day_max),
-            week=(week_avg, week_max),
-        )
+
+        try:
+            resp.body = template.render(
+                current=current,
+                one_min=(one_min_avg, one_min_max),
+                ten_min=(ten_min_avg, ten_min_max),
+                hour=(hour_avg, hour_max),
+                twelve_hour=(twelve_hour_avg, twelve_hour_max),
+                day=(day_avg, day_max),
+                week=(week_avg, week_max),
+            )
+        except Exception as e:
+            print(e)
+            print(locals())
+            raise falcon.HTTPInternalServerError(description='Error generating stats')
 
     def on_post(self, req, resp):
         args = falcon_parser.parse(
@@ -114,8 +120,8 @@ class WindResource(FalconWeatherResource):
 
     def _get_avg_max(self, session, cutoff):
         q = session.query(
-            func.avg(WindMeasurement.avg_mph).label('avg'),
-            func.max(WindMeasurement.max_mph).label('max')
+            func.coalesce(func.avg(WindMeasurement.avg_mph).label('avg'), 0),
+            func.coalesce(func.max(WindMeasurement.max_mph).label('max'), 0)
         ).filter(
             WindMeasurement.epoch >= func.unix_timestamp(func.now()) - cutoff
         )
