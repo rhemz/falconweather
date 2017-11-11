@@ -49,7 +49,7 @@ def query_current_vs_max(session, cutoff):
     current = q.one().current
 
     q = session.query(
-        func.max(WindMeasurement.max_mph).label('max')
+        func.coalesce(func.max(WindMeasurement.max_mph), 1).label('max')
     ).filter(
         WindMeasurement.epoch >= func.unix_timestamp(func.now()) - cutoff
     )
@@ -280,7 +280,7 @@ if __name__ == '__main__':
         elif isinstance(c, pygal.HorizontalBar) or isinstance(c, pygal.Bar):
             c.y_title = None
             c.x_title = 'mph'
-            BASE_CHART.x_label_rotation = 0
+            c.x_label_rotation = 0
 
             for value, time_label in data:
                 c.add(time_label, value)
