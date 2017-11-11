@@ -279,6 +279,7 @@ if __name__ == '__main__':
 
         elif isinstance(c, pygal.HorizontalBar) or isinstance(c, pygal.Bar):
             c.y_title = None
+            c.x_title = 'mph'
 
             for value, time_label in data:
                 c.add(time_label, value)
