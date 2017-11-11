@@ -120,8 +120,8 @@ class WindResource(FalconWeatherResource):
 
     def _get_avg_max(self, session, cutoff):
         q = session.query(
-            func.coalesce(func.avg(WindMeasurement.avg_mph).label('avg'), 0),
-            func.coalesce(func.max(WindMeasurement.max_mph).label('max'), 0)
+            func.coalesce(func.avg(WindMeasurement.avg_mph), 0).label('avg'),
+            func.coalesce(func.max(WindMeasurement.max_mph), 0).label('max')
         ).filter(
             WindMeasurement.epoch >= func.unix_timestamp(func.now()) - cutoff
         )
