@@ -94,6 +94,11 @@ class WindResource(FalconWeatherResource):
 
         if max >= ERROR_THRESHOLD:
             print('Likely erroneous measurement, discarding... {}'.format(args))
+            resp.media = {
+                'status': 'error',
+                'message': 'Likely erroneous measurement, discarding... {}'.format(args)
+            }
+            return
 
         with self.db.get_session() as session:
             try:
@@ -115,7 +120,8 @@ class WindResource(FalconWeatherResource):
         resp.media = {
             'status': status,
             'avg_mph': avg,
-            'max_mph': max
+            'max_mph': max,
+            'message': 'duplicate particle request...'
         }
 
     def _get_avg_max(self, session, cutoff):
