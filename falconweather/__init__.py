@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 
 import falcon
@@ -56,6 +57,8 @@ class WindResource(FalconWeatherResource):
             twelve_hour_avg, twelve_hour_max = self._get_avg_max(session, cutoff=3600 * 12)
             day_avg, day_max = self._get_avg_max(session, cutoff=86400)
             week_avg, week_max = self._get_avg_max(session, cutoff=86400 * 7)
+            month_avg, month_max = self._get_avg_max(session, cutoff=86400 * 30)
+            alltime_avg, alltime_max = self._get_avg_max(session, cutoff=sys.maxsize)
 
             q = session.query(
                 ((WindMeasurement.max_mph + WindMeasurement.max_mph) / 2).label('current')
@@ -77,6 +80,8 @@ class WindResource(FalconWeatherResource):
                 twelve_hour=(twelve_hour_avg, twelve_hour_max),
                 day=(day_avg, day_max),
                 week=(week_avg, week_max),
+                month=(month_avg, month_max),
+                alltime=(alltime_avg, alltime_max)
             )
         except Exception as e:
             print(e)
@@ -120,8 +125,7 @@ class WindResource(FalconWeatherResource):
         resp.media = {
             'status': status,
             'avg_mph': avg,
-            'max_mph': max,
-            'message': 'duplicate particle request...'
+            'max_mph': max
         }
 
     def _get_avg_max(self, session, cutoff):
