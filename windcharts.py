@@ -125,7 +125,7 @@ CHARTS = {
     },
     'avg_30d': {
         'chart_type': pygal.Line,
-        'title': 'Average Wind Speed (mont)',
+        'title': 'Average Wind Speed (month)',
         'data_method': query_wind_speeds,
         'data_args': {'cutoff': 86400 * 30},
         'data_keys': {
