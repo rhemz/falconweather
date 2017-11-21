@@ -118,7 +118,7 @@ class WindResource(FalconWeatherResource):
                 status = 'ok'
             except IntegrityError:
                 # duplicate timestamp.  usually the particle cloud fucking up
-                print('duplicate particle request...')
+                print('{} - duplicate particle request: {}...'.format(int(time.time()), args))
                 status = 'duplicate'
                 pass
 
