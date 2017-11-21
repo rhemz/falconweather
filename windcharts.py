@@ -123,6 +123,16 @@ CHARTS = {
         },
         'data_label': 'Wind Speed'
     },
+    'avg_30d': {
+        'chart_type': pygal.Line,
+        'title': 'Average Wind Speed (mont)',
+        'data_method': query_wind_speeds,
+        'data_args': {'cutoff': 86400 * 30},
+        'data_keys': {
+            0: 'Average Speed'
+        },
+        'data_label': 'Wind Speed'
+    },
 
     # maxes
     'max_10m': {
