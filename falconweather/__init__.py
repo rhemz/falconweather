@@ -15,7 +15,9 @@ from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 
 
+DOCKERIZED = bool(os.environ.get('FALCONWEATHER_DOCKERIZED', False))
 SITE_ADDR = os.environ.get('FALCONWEATHER_SITE', '')
+MYSQL_ADDR = os.environ.get('DOCKER_HOST_IP', '127.0.0.1') if DOCKERIZED else '127.0.0.1'
 
 ERROR_THRESHOLD = 90
 
@@ -147,7 +149,7 @@ class WindResource(FalconWeatherResource):
 # start
 session_manager = SessionManager(
     db_config={
-        'host':     os.environ.get('FALCONWEATHER_DB_HOST', 'localhost'),
+        'host':     MYSQL_ADDR,
         'port':     os.environ.get('FALCONWEATHER_DB_PORT', 3306),
         'user':     os.environ.get('FALCONWEATHER_DB_USER', 'falconweather'),
         'password': os.environ.get('FALCONWEATHER_DB_PASSWORD', ''),
