@@ -92,9 +92,15 @@ class WindResource(FalconWeatherResource):
 
     def on_post(self, req, resp):
         args = falcon_parser.parse(
-            argmap={'mph': fields.String(required=True)},
+            argmap={
+                'mph': fields.String(required=True), 
+                'published_at': fields.String(required=False), 
+                'coreid': fields.String(required=False), 
+                'event': fields.String(required=False), 
+                'data': fields.String(required=False)
+            },
             req=req,
-            force_all=True
+            location='form'
         )
 
         avg, max = self._parse_payload(args['mph'])
